@@ -13,18 +13,27 @@
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.1",
     "connect-mongo": "^4.6.0",
+    "element-plus": "^2.2.28",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "joi": "^17.7.0",
     "method-override": "^3.0.0",
     "mongoose": "^6.8.3",
     "passport": "^0.6.0",
+    "passport-local-mongoose": "^7.1.2",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",
     "vuetify": "^3.1.1"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^6.2.1",
+    "@mdi/font": "^7.1.96",
+    "@mdi/js": "^7.1.96",
     "@vitejs/plugin-vue": "^4.0.0",
+    "font-awesome": "^4.7.0",
+    "material-design-icons-iconfont": "^6.7.0",
+    "unplugin-auto-import": "^0.12.1",
+    "unplugin-vue-components": "^0.22.12",
     "vite": "^4.0.0"
   }
 }
