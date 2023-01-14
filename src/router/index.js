@@ -12,6 +12,12 @@ const routes = [
         path: '/admin/writeArticle',
         name: 'Admin',
         component: () => import('../views/admin/createArticle.vue')
+    },
+    // The two above are just tests
+    {
+        path: '/admin/RegisterAndLogin',
+        name: 'RegisterAndLogin',
+        component: () => import('../views/admin/RegisterAndLogin.vue')
     }
 ]
 
