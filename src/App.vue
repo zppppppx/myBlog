@@ -1,11 +1,14 @@
 <template>
-  <VApp>
-    <VMain>
-      
-      <router-view />
-      <footerVue />
-    </VMain>
-  </VApp>
+  <!-- <VApp>
+    <VMain> -->
+
+  <router-view />
+  <teleport to='body'>
+    <footerVue />
+  </teleport>
+
+  <!-- </VMain>
+  </VApp> -->
 </template>
 
 <script>
@@ -19,28 +22,19 @@ export default {
 
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
 
 #app {
+  /* background-color: black; */
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin: -8px -8px auto;
+  margin: -8px -8px 0px 0px;
   height: 100%;
   width: 100%;
+  padding: 0%;
+  /* display: flex;
+  flex-direction: column; */
 }
 </style>
