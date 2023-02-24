@@ -1,77 +1,84 @@
 <template>
+    <div class="outer-wrap">
+        <transition name="login">
+            <div class="form login" v-if="state === 'login'" id="login">
+                <h1 class="title"> Login </h1>
+                <v-form ref="login" v-model="valid" lazy-validation>
+                    <v-text-field v-model="username" :counter="10" :rules="[rules.required, rules.min_name]"
+                        label="Username" density="compact" required class="text-field"></v-text-field>
 
-    <!-- <div class="d-flex col-12"> -->
+                    <v-text-field v-model="password" :append-inner-icon="show_password ? '$mdi_eye' : '$mdi_eye_off'"
+                        :type="show_password ? 'text' : 'password'" :rules="[rules.required, rules.min_password]"
+                        class="text-field" label="Password" required @click:append-inner="show_password = !show_password"
+                        density="compact">
+                    </v-text-field>
 
-    <v-container class="fill-height">
-        <v-row class="text-center">
-            <!-- Register Form -->
-            <v-col align-self="center" cols="10" offset="1">
+                    <div class="tag"> <a href="#">Forgot Password?</a> </div>
 
-                <v-card class="pa-4" :class="{ front: cardFront, back: !cardFront }" height="400" ref="authCard">
-                    <div v-if="cardVis" :class="{ front: true, vis: cardVis, invis: !cardVis }">
-                        <h1 class="mb-6">Register</h1>
-                        <v-form ref="register" v-model="valid" lazy-validation>
-                            <v-text-field v-model="name" :counter="10" :rules="[rules.required, rules.min_name]"
-                                label="Name" density="compact" required></v-text-field>
+                    <button class="button-user" @click.prevent="login"> Sign in</button>
+                </v-form>
+            </div>
+        </transition>
 
-                            <v-text-field v-model="email" :rules="[rules.isEmail, rules.required]" label="E-mail"
-                                density="compact" required></v-text-field>
 
-                            <v-text-field v-model="password" :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'"
-                                :type="'password'" :rules="[rules.required, rules.min_password]" label="Password"
-                                required density="compact" @click:append="show_password = !show_password">
-                            </v-text-field>
+        <transition name="switch-login">
+            <div class="switch-page" id="switch-login" v-if="state === 'login'">
+                <h1 class="title">No Account Yet?</h1>
+                <h2 class="title">Let's register! <span class="mdi mdi-emoticon-kiss-outline"></span></h2>
+                <button class="button-user" @click="switchState"> Sign up</button>
+            </div>
+        </transition>
 
-                            <v-btn block color="success" class="mb-3" @click="switchState()">
-                                Has Account?
-                            </v-btn>
-                            <v-btn block color="success" class="mb-3" @click="register()">
-                                Register
-                            </v-btn>
-                        </v-form>
-                    </div>
+        <transition name="switch-register">
+            <div class="switch-page" id="switch-register" v-if="state === 'register'">
+                <h1 class="title">Has an Account?</h1>
+                <h2 class="title"> Just Login! <span class="mdi mdi-rocket-launch-outline"></span></h2>
+                <button class="button-user" @click="switchState"> Sign in </button>
+            </div>
+        </transition>
 
-                    <div v-if="!cardVis" :class="{ back: true, vis: !cardVis, invis: cardVis }">
-                        <h1 class="mb-6">Login</h1>
-                        <v-form ref="login" v-model="valid" lazy-validation>
-                            <v-text-field v-model="name" :counter="10" :rules="[rules.required, rules.min_name]"
-                                label="Name" density="compact" required></v-text-field>
+        <transition name="register">
+            <div class="form register" v-if="state === 'register'" id="register">
+                <h1 class="title">Register</h1>
+                <v-form ref="register" v-model="valid" lazy-validation>
+                    <v-text-field v-model="username" :counter="10" :rules="[rules.required, rules.min_name]"
+                        label="Username" density="compact" required class="text-field"></v-text-field>
 
-                            <v-text-field v-model="password" :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'"
-                                :type="'password'" :rules="[rules.required, rules.min_password]" label="Password"
-                                required @click:append="show_password = !show_password" density="compact">
-                            </v-text-field>
+                    <v-text-field v-model="password" :append-inner-icon="show_password ? '$mdi_eye' : '$mdi_eye_off'"
+                        :type="show_password ? 'text' : 'password'" class="text-field"
+                        :rules="[rules.required, rules.min_password]" label="Password" required density="compact"
+                        @click:append-inner="show_password = !show_password">
+                    </v-text-field>
 
-                            <v-btn block width="" color="success mb-3" @click="switchState()">
-                                No Account Yet?
-                            </v-btn>
-                            <v-btn block width="" color="success mb-3" @click="Login()">
-                                Login
-                            </v-btn>
-                        </v-form>
-                    </div>
-                </v-card>
-            </v-col>
+                    <v-text-field v-model="email" :rules="[rules.isEmail, rules.required]" label="E-mail" density="compact"
+                        required class="text-field"></v-text-field>
 
-        </v-row>
-    </v-container>
 
+                    <div class="tag"> <a href="#">Get Verification</a> </div>
+                    <button class="button-user" @click.prevent="register"> Sign up </button>
+                </v-form>
+            </div>
+        </transition>
+    </div>
 </template>
 
 <script>
-
+import axios from 'axios'
+import userAlert from './userAlert.vue'
+import { useToast } from "vue-toastification";
 export default {
     data() {
         return {
-            test: true,
-            cardFront: true,
-            cardVis: true,
-            state: 'register',
+            toast: useToast(),
+            state: 'login', // register for 0 and login for 1
             valid: true,
-            name: '',
+            username: '',
             email: '',
             password: '',
             show_password: false,
+            msg_success: '',
+            msg_failure: '',
+            show_alert: true,
             rules: {
                 required: v => !!v || 'Required',
                 min_password: v => v.length >= 8 || 'Min 8 characters',
@@ -85,80 +92,210 @@ export default {
     computed: {
 
     },
+    watch: {
+        
+    },
     methods: {
         async validate() {
-            const { valid } = await this.$refs.register.validate()
+            const { valid } = await this.$refs[this.state].validate()
 
             if (valid) alert('Form is valid')
         },
-        reset() {
-            this.$refs.register.reset()
-        },
-        resetValidation() {
-            this.$refs.register.resetValidation()
-        },
-        async register() {
 
-        },
         switchState() {
-            setTimeout(() => {
-                this.cardVis = !this.cardVis
-            }, 200)
-            setTimeout(() => {
-                this.cardFront = !this.cardFront
-            }, 0)
-            // this.cardVis = !this.cardVis
-            // this.cardFront = !this.cardFront
+            this.state = this.state == 'register' ? 'login' : 'register';
+        },
+
+        async register() {
+            const { valid } = await this.$refs[this.state].validate()
+            if (!valid) {
+                return;
+            }
+
+            const authData = {
+                username: this.username,
+                email: this.email,
+                password: this.password
+            }
+            try {
+                await axios.post('http://localhost:3000/admin/register', authData)
+                    .then(res => {
+                        console.log(res)
+                        if(res.status === 200) {
+                            this.toast.success("Successfully registered!")
+                        }
+                    })
+                    .catch(e => {
+                        this.toast.error('The username has been used!')
+                    })
+                // window.location.href = '/admin/writeArticle'
+            }
+            catch (e) {
+                console.log(e.message)
+            }
+        },
+        async login() {
+            const { valid } = await this.$refs[this.state].validate()
+            if (!valid) {
+                return;
+            }
+
+            const authData = {
+                username: this.username,
+                password: this.password
+            }
+            try {
+                axios.post('http://localhost:3000/admin/login', authData)
+                    .then(res => {
+                        console.log(res)
+                        if(res.status === 200) {
+                            // this.msg_success = 'Welcome back!'
+
+                            this.toast.success("Welcome back!")
+                        }
+                    })
+                    .catch(e => this.toast.error('The password and username do not match!'))
+                // await axios({
+                //     method: 'post',
+
+                // })
+                // window.location.href = '/admin/writeArticle'
+            }
+            catch (e) {
+                console.log(e.message)
+            }
         }
-        // matchHeight() {
-        //     var heightString = this.$refs.infoBox.clientHeight + 'px';
-        //     Vue.set(this.leftColStyles, 'height', heightString); 
-        // }
     },
     mounted() {
-        console.log(this.$refs.authCard)
+        console.log(this.$router)
+    },
+    components: {
+        userAlert
     }
 }
 </script>
 
-<style scoped>
-.center {
+<style scoped lang="less">
+.outer-wrap {
+    width: 750px;
+    max-width: 100%;
+    min-height: 450px;
+    display: flex;
+    flex-direction: row;
+    border-radius: 15px;
+    overflow: hidden;
     position: relative;
-    /* width: 100%;
-    margin: 20px 20px 20px 20px; */
-    /* padding: 25px 0; */
-    /* margin: v-bind(-cardHeight*0.5); */
+
+    .button-user {
+        border-radius: 30px;
+        width: 30%;
+
+        border: 2px solid;
+        font-weight: bolder;
+        transition: all 0.2s;
+    }
+
+    .button-user:hover {
+        transform: scale(1.1);
+        transition: all 0.2s;
+    }
+
+    .form {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-color: rgba(167, 241, 188, 0.2);
+        position: absolute;
+        height: 100%;
+
+        .tag {
+            margin-bottom: 15px;
+            font-family: Georgia;
+
+            a {
+                color: black;
+            }
+        }
+    }
+
+    #login {
+        left: 0;
+    }
+
+    #register {
+        left: 50%;
+    }
+
+    .switch-page {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 50%;
+        align-items: center;
+        position: absolute;
+        height: 100%;
+        // background-color: rgba(244, 144, 62, 0.4);
+    }
+
+    #switch-login {
+        background-color: rgba(244, 144, 62, 0.4);
+        left: 50%;
+    }
+
+    #switch-register {
+        background-color: rgba(231, 112, 13, 0.5);
+        left: 0;
+    }
+
+    .text-field {
+        width: 90%;
+        margin: auto;
+    }
+
+    .title {
+        font-family: 'Brush Script MT', cursive;
+
+        padding: 30px;
+    }
 }
 
-.test {
-    background-color: white;
+
+
+.login-enter-active,
+.login-leave-active,
+.register-enter-active,
+.register-leave-active,
+.switch-login-enter-active,
+.switch-login-leave-active,
+.switch-register-enter-active,
+.switch-register-leave-active {
+    transition: all 0.8s ease;
 }
 
-.turn {
-    transform: rotateY(180deg);
-    transition: 0.5s;
+.login-enter-from,
+.login-leave-to {
+    opacity: 0;
+    transform: translateY(100%);
 }
 
-/* .card-content {
-    backface-visibility: hidden;
-} */
-.front {
-    transform: rotateY(0deg);
-    transition: 0.8s;
+.register-enter-from,
+.register-leave-to {
+    opacity: 0;
+    transform: translateX(-100%);
 }
 
-.back {
-    transform: rotateY(180deg);
-    transition: 0.8s;
+
+.switch-login-enter-from,
+.switch-login-leave-to {
+    opacity: 0;
+    transform: translateX(-100%);
+    // left: 0;
 }
 
-.vis {
-    visibility: visible;
-    transition-delay: 0.5s;
-}
-
-.invis {
-    visibility: hidden;
-    transition-delay: 0.5s;
+.switch-register-enter-from,
+.switch-register-leave-to {
+    opacity: 0;
+    transform: translateX(100%);
 }
 </style>

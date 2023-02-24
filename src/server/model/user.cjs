@@ -29,7 +29,7 @@ const UserSchema = new Schema({
     updatedAt: {
         type: Date,
         default: Date.now,
-    }
+    },
 });
 
 UserSchema.plugin(passportLocalMongoose);
