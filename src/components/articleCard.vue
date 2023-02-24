@@ -4,11 +4,13 @@
     <v-card class="articleCard">
         <div class="post-content">
             <!-- <div class="left"> -->
-            <div class="post-meta"> time </div>
+            <div class="post-meta"> <span class="mdi mdi-calendar-month-outline"></span> posted at time </div>
             <h2 style="margin: 15px 0px">Title</h2>
             <div class="post-meta"> likes and comments</div>
             <div class="post-desc"> Description </div>
-            <div class="post-tag"> <span>tag1</span> <span>tag2</span> </div>
+            <div class="post-tags">
+                <span class="post-tag">tag1</span> <span class="post-tag">tag2</span>
+            </div>
             <!-- </div> -->
 
         </div>
@@ -19,9 +21,6 @@
 </template>
 
 <script>
-import { object } from 'webidl-conversions';
-
-
 export default {
     data() {
         return {
@@ -39,23 +38,23 @@ export default {
 
 <style scoped lang="less">
 .articleCard {
-    max-width: 700px;
+    max-width: 750px;
+    width: 80%;
     height: 300px;
-    margin: 20px 20px;
+    margin: 0px 0px 30px 0px;
     display: flex;
     flex-direction: row;
     cursor: pointer;
     position: relative;
     border-radius: 20px;
-    flex-wrap: wrap;
+    box-shadow: 0px 0px 5px 0px hsla(0, 0%, 43.1%, 0.4);
 }
 
 
 .articleCard:hover {
-    box-shadow: 10px 10px lightblue;
+    box-shadow: 0px 0px 10px 5px rgba(194, 219, 167, 0.4);
     overflow: hidden;
 }
-
 
 
 .post-content {
@@ -74,10 +73,21 @@ export default {
 
     .post-desc {}
 
-    .post-tag {
+    .post-tags {
         margin-top: auto;
-        // position: relative;
-        // bottom: 10px;
+
+        .post-tag {
+            background-color: #E4EDDD;
+            padding: 3px 12px;
+            border-radius: 3px;
+            transition: all 0.5s ease 0s;
+        }
+
+        .post-tag:hover {
+            background-color: #F2E461;
+            transition: all 0.5s ease 0s;
+            color: white;
+        }
     }
 }
 
