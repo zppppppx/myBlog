@@ -64,8 +64,9 @@
 
 <script>
 import axios from 'axios'
-import userAlert from './userAlert.vue'
+
 import { useToast } from "vue-toastification";
+const appUrl = import.meta.env.VITE_APP_URL
 export default {
     data() {
         return {
@@ -118,7 +119,7 @@ export default {
                 password: this.password
             }
             try {
-                await axios.post('http://localhost:3000/admin/register', authData)
+                await axios.post(`${appUrl}admin/register`, authData)
                     .then(res => {
                         console.log(res)
                         if(res.status === 200) {
@@ -145,21 +146,19 @@ export default {
                 password: this.password
             }
             try {
-                axios.post('http://localhost:3000/admin/login', authData)
+                await axios.post(`${appUrl}admin/login`, authData)
                     .then(res => {
                         console.log(res)
                         if(res.status === 200) {
                             // this.msg_success = 'Welcome back!'
-
                             this.toast.success("Welcome back!")
+                            if(res.data.redirect_code) {
+                                console.log(res.data.redirect_code)
+                                // this.$router.push('/admin/writeArticle')
+                            }
                         }
                     })
                     .catch(e => this.toast.error('The password and username do not match!'))
-                // await axios({
-                //     method: 'post',
-
-                // })
-                // window.location.href = '/admin/writeArticle'
             }
             catch (e) {
                 console.log(e.message)
@@ -167,10 +166,10 @@ export default {
         }
     },
     mounted() {
-        console.log(this.$router)
+        // console.log(this.$router)
     },
     components: {
-        userAlert
+
     }
 }
 </script>

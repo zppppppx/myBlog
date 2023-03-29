@@ -10,7 +10,8 @@ import 'vuetify/dist/vuetify.min.css'
 // import { aliases, fa } from 'vuetify/iconsets/fa'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 
-import { mdiAccount, mdiChevronDown, mdiChevronUp, mdiFolderOpenOutline, mdiEyeOffOutline, mdiEyeOutline } from '@mdi/js'
+import { mdiAccount, mdiChevronDown, mdiChevronUp, mdiFolderOpenOutline, mdiEyeOffOutline, mdiEyeOutline,
+        mdiImageOutline } from '@mdi/js'
 
 export default createVuetify({
     components,
@@ -25,6 +26,7 @@ export default createVuetify({
             category_side_bar: mdiFolderOpenOutline,
             mdi_eye_off: mdiEyeOffOutline,
             mdi_eye: mdiEyeOutline,
+            mdi_image: mdiImageOutline,
         },
         sets: {
             // fa,
