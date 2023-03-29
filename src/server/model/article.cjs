@@ -1,7 +1,13 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose)
 const Schema = mongoose.Schema;
+const User = require('./user.cjs')
+
 
 const ArticleSchema = new Schema({
+    id: {
+        type: Number,
+    },
     title: {
         type: String,
         required: true
@@ -15,22 +21,27 @@ const ArticleSchema = new Schema({
         default: Date.now,
     },
     author: {
-        type: mongoose.Types.ObjectId,
-        required: true,
+        type: Schema.Types.ObjectId,
+        required: false,
         ref: 'User'
     },
-    keyword: [{
-        type: String,
-        default: ''
-    }],
     description: {
         type: String,
         default: ''
     },
-    content: {
+    
+    markdown: {
         type: String,
         required: true,
+        default: ''
     },
+    html: {
+        type: String,
+        required: false,
+        default: ''
+    },
+    
+        
     // The number of the characters of the article.
     number_charac: {
         type: String,
@@ -41,37 +52,38 @@ const ArticleSchema = new Schema({
         type: String,
         default: "https://res.cloudinary.com/dhwbsgmjw/image/upload/v1672855243/YelpCamp/dxgw7500cakfa4qs9f2c.jpg"
     },
-    //The type of the article, 1 for reguler article, 2 for Technical article ...
-    type: {
-        type: Number,
-        default: 1,
-    },
+    images: [{
+        url: String,
+        filename: String
+    }],
+
     // The state of the article. 0 for draft and 1 for posted.
     state: {
         type: Number,
         default: 1,
     },
-    // Whether the file state is orginal or transfered from others
-    origin: {
-        type: Number,
-        default: 0
-    },
+
     tags: [{
         type: Schema.Types.ObjectId,
         ref: 'Tag',
+        select: 'tag',
     }],
     comments: [{
         type: Schema.Types.ObjectId,
         ref: 'Comment',
     }],
-    Category: [{
+    categories: [{
         type: Schema.Types.ObjectId,
         ref: 'Category',
+        select: 'category',
     }],
     like_users: [
         {
-            id: { type: Schema.Types.ObjectId },
-            ref: 'User'
+            id: {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+            },
+
         },
     ],
     meta: {
@@ -81,4 +93,5 @@ const ArticleSchema = new Schema({
     }
 })
 
-mongoose.exports = new mongoose.model('Article', ArticleSchema);
+
+module.exports = new mongoose.model('Article', ArticleSchema);

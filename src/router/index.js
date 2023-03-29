@@ -10,14 +10,24 @@ const routes = [
     },
     {
         path: '/admin/writeArticle',
-        name: 'Admin',
+        name: 'writeArticle',
         component: () => import('../views/admin/createArticle.vue')
+    },
+    {
+        path: '/admin/editArticle',
+        name: 'editArticle',
+        component: () => import('../views/admin/editArticle.vue')
     },
     // The two above are just tests
     {
-        path: '/admin/RegisterAndLogin',
+        path: '/RegisterAndLogin',
         name: 'RegisterAndLogin',
         component: () => import('../views/admin/RegisterAndLogin.vue')
+    },
+    {
+        path: '/articles',
+        name: 'articles',
+        component: () => import('../views/article/articleList.vue')
     }
 ]
 
