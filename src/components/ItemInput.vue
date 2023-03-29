@@ -54,14 +54,21 @@ export default {
         addItem(item) {
             if (item.trim() != '' && !this.inHasChosen.includes(item)) {
                 this.inHasChosen.push(item);
+                
             }
+            this.$emit('update:hasChosen', this.inHasChosen)
         },
         removeItem(index) {
             this.inHasChosen.splice(index, 1)
         },
     },
-    watch: {},
+    watch: {
+        hasChosen(val) {
+            this.inHasChosen = val
+        }
+    },
     mounted() {
+        // console.log(this.hasChosen)
         document.addEventListener("click", (e) => {
             let region = this.$refs.dropdown.$el;
             // console.log(this.$refs.dropdown.$el, e.target)

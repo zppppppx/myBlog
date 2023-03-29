@@ -8,7 +8,7 @@
                 <div class="tag-category">
                     <div class="half pd">
                         <ItemInput v-model="tag" :label="'Add Tags'" v-model:has-chosen="article.tags"
-                            :existing-choices="existingTags" @keydown.enter="() => {tag = ''; show()}">
+                            :existing-choices="existingTags" @keydown.enter="() => {tag = ''}">
                         </ItemInput>
                     </div>
                     <div class="half">
@@ -17,13 +17,11 @@
                         </ItemInput>
                     </div>
                 </div>
-
                 <div style="margin-top: 10px;"> </div>
                 <v-file-input
                     label="Upload Image Cover"
-                    
                     :rules="[rules.required]"
-                    accept=".jpeg,.jpg,.png"
+                    accept=".pdf,.doc,.docx"
                     @change="onFileChange"
                     density="compact"
                     prepend-inner-icon="$mdi_image"
@@ -58,7 +56,7 @@ import 'md-editor-v3/lib/style.css';
 import ItemInput from '../../components/ItemInput.vue';
 import { useToast } from "vue-toastification";
 import ErrorCode from '../../ErrorCode.cjs'
-
+import { reactive, onMounted, ref } from 'vue';
 
 // import cloudinary from '../../cloudinary/index.cjs'
 // import {v2} from 'cloudinary';
@@ -76,7 +74,7 @@ export default {
         return {
             timeID: null,
             _id: '',
-            article: {
+            article: reactive({
                 id: null,
                 title: '',
                 description: '',
@@ -86,12 +84,12 @@ export default {
                 
                 image_cover: '',
                 state: 0,
-                tags: [],
-                categories: [],
+                tags: reactive([]),
+                categories: reactive([]),
                 state: 0,
-                images: [],
-                keywords: [],
-            },
+                images: reactive([]),
+                keywords: reactive([]),
+            }),
             tag: '',
             category: '',
             existingTags: [],
@@ -100,8 +98,6 @@ export default {
                 required: v => !!v || 'Required',
             },
             toast: useToast(),
-
-            file: null,
         }
     },
     components: {
@@ -109,14 +105,9 @@ export default {
         ItemInput,
     },
     methods: {
-        show() {
-            console.log(this.article.tags)
-        },
-
         transform(html) {
             this.article.html = html
         },
-
         async handleUploadImg(files, callback) {
             let form = new FormData()
             for(let i = 0; i < files.length; i++) {
@@ -199,12 +190,12 @@ export default {
                 this.save()
             }, 10000)
         },
-
         check() {
             if (this.article.title.length === 0) {
                 this.article.title = "untitled"
             }
         },
+
 
         async onFileChange(e) {
             const previous_file = this.file
@@ -235,14 +226,34 @@ export default {
             .catch(e => console.log(e))
         }
     },
-
     created() {
+        console.log(this.$route.query.id)
+        this.article.id = this.$route.query.id
+        
         axios.get(`${appUrl}admin/articleInfo`)
             .then(res => {
-                this.article.id = res.data.id
-                this.$router.push(`/admin/writeArticle?id=${this.article.id}`)
                 this.existingCategories = res.data.categories
                 this.existingTags = res.data.tags
+                axios.get(`${appUrl}admin/getArticle?id=${this.article.id}`)
+                    .then(res => {
+                        let article = res.data
+                        const tags = [...article.tags.map(item => item.tag)]
+                        const categories = [...article.categories.map(item => item.category)]
+                        article.tags = tags
+                        article.categories = categories
+                        this._id = article._id
+                        // console.log(article)
+                        
+                        // Object.keys(this.article).forEach(key => {
+                            
+                        //     this.article[key] = article[key]
+                        // })
+                        this.article = Object.assign({}, article)
+                        // const newArticle = reactive(Object.assign({}, article))
+                        // this.article = newArticle
+                        // this.article.tags = reactive(article.tags)
+                        
+                    })
             })
     },
     mounted() {
@@ -253,6 +264,8 @@ export default {
             handler(val, oldVal) {
                 if (val.length > 0) {
                     this.autoSave()
+                    // console.log(this.article)
+                    // this.article.tags.push(`${val.length}`)
                 }
             }
         },
