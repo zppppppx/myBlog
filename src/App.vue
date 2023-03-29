@@ -1,14 +1,14 @@
 <template>
-  <!-- <VApp>
-    <VMain> -->
+  <!-- <v-app> -->
+  <!-- <VApp> -->
+    <!-- <VMain> -->
 
   <router-view />
-  <teleport to='body'>
-    <footerVue />
-  </teleport>
+  
 
-  <!-- </VMain>
-  </VApp> -->
+  <!-- </VMain> -->
+  <!-- </VApp> -->
+<!-- </v-app> -->
 </template>
 
 <script>
@@ -23,8 +23,8 @@ export default {
 
 <style scoped>
 
-#app {
-  /* background-color: black; */
+/* #app {
+
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -34,7 +34,6 @@ export default {
   height: 100%;
   width: 100%;
   padding: 0%;
-  /* display: flex;
-  flex-direction: column; */
-}
+
+} */
 </style>
