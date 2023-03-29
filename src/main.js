@@ -4,18 +4,21 @@ import '../src/stylesheet/style.css'
 import App from './App.vue'
 import router from './router'
 import '@mdi/font/css/materialdesignicons.css'
-import 'material-design-icons-iconfont/dist/material-design-icons.css'
-import 'vuetify/dist/vuetify.min.css'
+
+// import 'material-design-icons-iconfont/dist/material-design-icons.css'
+// import 'vuetify/dist/vuetify.min.css'
 import Toast, { POSITION } from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
 import vuetify from './plugin/vuetify'
-import ElementPlus from './plugin/elementPlus'
+// import ElementPlus from './plugin/elementPlus'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-
-
+// import dotenv from "dotenv"
+// if (process.env.NODE_ENV !== "production") {
+//     dotenv.config();
+// }
 
 // import 'vuetify/styles'
 // import { createVuetify } from 'vuetify'
@@ -49,7 +52,6 @@ const toastOptions = {
 createApp(App)
     .use(router)
     .use(vuetify)
-    .use(ElementPlus)
     .use(VueAxios, axios)
     .use(Toast, toastOptions)
     .mount('#app')
