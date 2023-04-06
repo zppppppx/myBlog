@@ -1,26 +1,29 @@
 <template>
-
     <!-- <v-col cols="8" style="display: flex"> -->
-    <v-card class="articleCard">
+
+    <v-card class="articleCard" @click="getArticle">
+
         <div class="post-content">
             <!-- <div class="left"> -->
-            <div class="post-meta"> <span class="mdi mdi-calendar-month-outline"></span> posted at time </div>
-            <h2 style="margin: 15px 0px">Title</h2>
+            <div class="post-meta"> <span class="mdi mdi-calendar-month-outline"></span> posted at {{ createdAt }}</div>
+            <h2 style="margin: 15px 0px">{{ article.title }}</h2>
             <div class="post-meta"> likes and comments</div>
-            <div class="post-desc"> Description </div>
+            <div class="post-desc"> {{ article.description }} </div>
             <div class="post-tags">
-                <span class="post-tag">tag1</span> <span class="post-tag">tag2</span>
+                <span class="post-tag" v-for="category in article.categories" :key="category">{{ category.category }}</span>
+                <span class="post-tag" v-for="tag in article.tags" :key="tag">{{ tag.tag }}</span>
             </div>
-            <!-- </div> -->
-
         </div>
+
         <div class="post-image">
-            <img src="https://res.cloudinary.com/dhwbsgmjw/image/upload/v1672623897/cld-sample-4.jpg" alt="">
+            <img :src="article.image_cover" alt="">
         </div>
     </v-card>
 </template>
 
 <script>
+import { formDate } from "../utils/helper.js"
+
 export default {
     data() {
         return {
@@ -32,14 +35,27 @@ export default {
             type: Object,
             required: true
         }
+    },
+    computed: {
+        createdAt() {
+            return formDate(this.article.createdAt)
+        }
+    },
+    methods: {
+        getArticle() {
+            console.log('haha')
+            this.$router.push(`article?id=${this.article.id}`)
+        }
     }
+
+
 }
 </script>
 
 <style scoped lang="less">
 .articleCard {
     max-width: 750px;
-    width: 80%;
+    width: 100%;
     height: 300px;
     margin: 0px 0px 30px 0px;
     display: flex;
@@ -58,7 +74,7 @@ export default {
 
 
 .post-content {
-    width: 55%;
+    width: 50%;
     height: 100%;
     padding: 20px 35px;
     display: flex;
@@ -77,14 +93,15 @@ export default {
         margin-top: auto;
 
         .post-tag {
-            background-color: #E4EDDD;
+            background-color: #ddd;
             padding: 3px 12px;
+            margin-right: 3px;
             border-radius: 3px;
             transition: all 0.5s ease 0s;
         }
 
         .post-tag:hover {
-            background-color: #F2E461;
+            background-color: #ABD55D;
             transition: all 0.5s ease 0s;
             color: white;
         }
@@ -100,9 +117,9 @@ export default {
 
 .post-image {
     float: left;
-    width: 45%;
+    width: 50%;
     height: 100%;
-    background-color: black;
+    // background-color: black;
     overflow: hidden;
 
     img {
