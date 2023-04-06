@@ -43,7 +43,7 @@ module.exports.editArticle = async (req, res, next) => {
 
         res.send({ _id: article._id.toString() })
     }
-    catch(e) {
+    catch (e) {
         res.writeHead(400, "VALIDATION", { "Error-Code": "VALIDATION" })
         res.send()
     }
@@ -53,28 +53,53 @@ module.exports.uploadImage = async (req, res, next) => {
     // console.log(req.body, req.files, req.params, req.query)
     // res.send('finished')
     filenames = req.files.map(item => item.filename)
+    console.log(filenames.length)
     res.send(filenames)
 }
 
 
 module.exports.getArticle = async (req, res, next) => {
     const { id } = req.query
-    let article = await Article.findOne({id: id}).populate({
+    let article = await Article.findOne({ id: id }).populate({
         path: 'tags',
         select: 'tag'
     }).populate({
         path: 'categories',
         select: 'category'
     })
-    
-    // const tags = [...article.tags.map(item => item.tag)]
-    // const categories= [...article.categories.map(item => item.category)]
-    // console.log(tags, categories)
-    // article.tags = tags
-    // article.categories = categories
 
-    console.log(article)
     res.send(article)
+}
+
+module.exports.getArticles = async (req, res, next) => {
+    try {
+        console.log(req.query)
+        const query = {};
+        
+        if (req.query.tag) {
+            query.tags = req.query.tag;
+        }
+        if (req.query.category) {
+            query.category = req.query.category;
+        }
+        if (req.query.id) {
+            query.id = req.query.id;
+        }
+        let sort = '-createdAt'; // default sorting
+        if (req.query.sort) {
+            sort = req.query.sort;
+        }
+        
+        const skip = req.query.skip ? req.query.skip : 0
+        const limit = 2
+
+        const articles = await Article.find(query).skip(skip).limit(limit).sort(sort)
+                                    .populate('tags').populate('categories');
+        res.json(articles);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 }
 
 module.exports.getInfo = async (req, res, next) => {
@@ -88,18 +113,18 @@ module.exports.getInfo = async (req, res, next) => {
         sort: {
             id: -1
         },
-        
+
     })
 
-    data.id = article ? article.id+1 : 1
+    data.id = article ? article.id + 1 : 1
 
     const tags = await Tag.find({})
-    if(tags) {
+    if (tags) {
         data.tags = [...tags.map(item => item.tag)]
     }
 
     const categories = await Category.find({})
-    if(categories) {
+    if (categories) {
         data.categories = [...categories.map(item => item.category)]
     }
 
@@ -108,7 +133,7 @@ module.exports.getInfo = async (req, res, next) => {
 
 module.exports.fetchImage = async (req, res, next) => {
     // console.log(req.params)
-    const {filename} = req.params
+    const { filename } = req.params
     const { id } = req.query
     filepath = path.join(__dirname, `../uploadFiles/articleImages/${id}/${filename}`)
     res.sendFile(filepath)

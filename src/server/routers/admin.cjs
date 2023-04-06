@@ -47,6 +47,9 @@ router.route('/editArticle')
 router.route('/getArticle')
     .get(admin.article.getArticle)
 
+router.route('/getArticles')
+    .get(admin.article.getArticles)
+
 router.route('/articleInfo')
     .get(admin.article.getInfo)
 
